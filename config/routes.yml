@@ -1,0 +1,14 @@
+cron_empik_hello:
+  path: /cron/baselinker/hello
+  controller: BaseLinkerNts\Controller\CronController::hello
+  methods: ['GET','HEADER']
+
+cron_empik_by_status:
+  path: /cron/baselinker
+  controller: BaseLinkerNts\Controller\CronController::sendByStatus
+  methods: [ 'GET','HEADER' ]
+
+cron_empik_by_id:
+  path: /cron/baselinker/{orderId<\d+>}
+  controller: BaseLinkerNts\Controller\CronController::sendById
+  methods: [ 'GET','HEADER' ]

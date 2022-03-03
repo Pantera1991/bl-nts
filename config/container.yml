@@ -1,0 +1,35 @@
+imports:
+  - { resource: services.yml }
+
+parameters:
+  routes: { resource: './routing.yml' }
+
+services:
+  controller_resolver:
+    class: BaseLinkerNts\Controller\ControllerResolver
+    arguments: [ '@service_container','@app.logger' ]
+
+  request_stack:
+    class: Symfony\Component\HttpFoundation\RequestStack
+
+  listener.router:
+    class: Symfony\Component\HttpKernel\EventListener\RouterListener
+    arguments: [ '@matcher','@request_stack' ]
+
+  listener.exception:
+    class: BaseLinkerNts\EventSubscriber\ExceptionSubscriber
+    arguments: [ '@app.logger' ]
+
+  dispatcher:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+    calls:
+      - [ addSubscriber, [ '@listener.router' ] ]
+      - [ addSubscriber, [ '@listener.exception' ] ]
+
+  argument_resolver:
+    class: Symfony\Component\HttpKernel\Controller\ArgumentResolver
+
+  app.kernel:
+    class: BaseLinkerNts\AppKernel
+    arguments: [ '@dispatcher','@controller_resolver','@request_stack', '@argument_resolver','@app.logger' ]
+    public: true

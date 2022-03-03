@@ -1,0 +1,958 @@
+<wsdl:definitions xmlns:ns="http://order.ecommerce.webservice.application.wincash"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:ax210="http://order.bean.response.ecommerce.webservice.application.wincash/xsd"
+                  xmlns:ax23="http://attribute.bean.ecommerce.webservice.application.wincash/xsd"
+                  xmlns:ax26="http://product.bean.ecommerce.webservice.application.wincash/xsd"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:ax22="http://client.bean.ecommerce.webservice.application.wincash/xsd"
+                  xmlns:ax21="http://order.bean.ecommerce.webservice.application.wincash/xsd"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  targetNamespace="http://order.ecommerce.webservice.application.wincash">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://order.bean.response.ecommerce.webservice.application.wincash/xsd">
+            <xs:complexType name="StatusResultType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="order_status" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="order_waybill_no" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="order_last_update_user" nillable="false"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="order_last_update_date" nillable="false"
+                                type="xs:dateTime"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_note" nillable="false" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ResultType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_code" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="elements" nillable="false" type="ax210:ElementsType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ElementsType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="1" name="item" nillable="false"
+                                type="ax210:ResponseItemType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ResponseItemType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="item_code" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="item_error_code" nillable="false" type="xs:int"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="item_error_message" nillable="false"
+                                type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://order.bean.ecommerce.webservice.application.wincash/xsd">
+            <xs:import namespace="http://client.bean.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:import namespace="http://product.bean.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:complexType name="OrderDataType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="ord_payment_code" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="ord_payment_confirmed" nillable="false"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="ord_realization_confirmed" nillable="false"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="ord_invoice_type_code" nillable="false"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_note" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_pin" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_realization_date" nillable="false"
+                                type="xs:dateTime"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="shipping" nillable="true" type="ax21:ShippingType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="deliveryAddress" nillable="true"
+                                type="ax21:DeliveryAddressType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="delivery_shop_no" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="customerData" nillable="false"
+                                type="ax22:CustomerDataType"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="orderElements" nillable="false"
+                                type="ax21:OrderElementsType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="invoiceData" nillable="true"
+                                type="ax22:InvoiceDataType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ShippingType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_shipping_delivery_type" nillable="true"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_shipping_code" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_shipping_vat_rate" nillable="true"
+                                type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_shipping_price" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ord_shipping_price_gross" nillable="true"
+                                type="xs:float"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DeliveryAddressType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="delivery_fname" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="delivery_lname" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="deliveryAddress" nillable="false"
+                                type="ax22:CustomerAddressType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="pickup_no" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="pickup_name" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OrderElementsType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="1" name="item" nillable="false" type="ax21:ItemType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ItemType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="item_code" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="amount" nillable="false" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="price" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="price_gross" nillable="false" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="vat_rate" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="delivery_type" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://client.bean.ecommerce.webservice.application.wincash/xsd">
+            <xs:import namespace="http://attribute.bean.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:complexType name="CustomerDataType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customerInfo" nillable="true"
+                                type="ax22:CustomerInformationType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customerAddress" nillable="true"
+                                type="ax22:CustomerAddressType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="companyData" nillable="true"
+                                type="ax22:CompanyDataType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="CustomerInformationType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_code" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Customer code, unique ID which identifies a client</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_fname" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>First name</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_lname" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Last name</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_note" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_card_no" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_external_code" nillable="true"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="discount_val" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="dynamic_fields" nillable="true"
+                                type="ax22:DynamicFieldsType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DynamicFieldsType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="1" name="field" nillable="false"
+                                type="ax22:DynFieldType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DynFieldType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="value" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="CompanyDataType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="company_country_code" nillable="true"
+                                type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="company_name" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="company_nip" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="CustomerAddressType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="country_code" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="city" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="zip" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="street" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="email" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="phone" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="mobile_phone" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="InvoiceDataType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="customer_fname" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="customer_lname" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="invoiceAddress" nillable="false"
+                                type="ax22:CustomerAddressType"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="companyData" nillable="true"
+                                type="ax22:CompanyDataType"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://attribute.bean.ecommerce.webservice.application.wincash/xsd">
+            <xs:complexType name="AttributesType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attribute" nillable="true"
+                                type="ax23:AttributeType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AttributeType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="attr_name" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="attr_type" nillable="false"
+                                type="ax23:Attr_typeType"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="attr_value" nillable="false" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="Attr_typeType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="STRING"/>
+                    <xs:enumeration value="INT"/>
+                    <xs:enumeration value="FLOAT"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://order.ecommerce.webservice.application.wincash">
+            <xs:import namespace="http://order.bean.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:import namespace="http://order.bean.response.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:import namespace="http://client.bean.ecommerce.webservice.application.wincash/xsd"/>
+            <xs:element name="salesOrder">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="shop_no" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_id" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_type" nillable="false" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Order type: O - Order, R - Reservation, F - Sale from shops
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="orderData" nillable="false"
+                                    type="ax21:OrderDataType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="salesOrderConfirm">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="shop_no" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_id" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="confirm_note" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="ord_pin" nillable="true" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Authorization PIN code</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_payment_confirmed" nillable="false"
+                                    type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="salesOrderStatus">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="shop_no" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_id" nillable="false" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="response">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_id" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="result" nillable="false" type="ax210:ResultType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="statusResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="ord_id" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="statusResult" nillable="false"
+                                    type="ax210:StatusResultType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="hello">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="app" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="helloResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="status" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="version" type="xs:string"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stockLevels">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="search_par"
+                                    type="ns:SearchParamsType"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stockLevelsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false"
+                                    type="xs:int"></xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="item" type="ns:StockLevel"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="SearchParamsType">
+                <xs:annotation>
+                    <xs:documentation>Search params for filtering search results</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="delta" nillable="true" type="xs:int">
+                        <xs:annotation>
+                            <xs:documentation>Time back (in minutes) since last modification</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="matgroup" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Product group</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="matno" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Product ID</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="matname" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="StockLevel">
+                <xs:sequence></xs:sequence>
+                <xs:attribute name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Product ID</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="name" type="xs:string"/>
+                <xs:attribute name="qty" type="xs:float"/>
+                <xs:attribute name="sqty" type="xs:float"/>
+            </xs:complexType>
+            <xs:complexType name="ShopLevel">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="no" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Shop name</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="1" name="qty" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>Shop stock level</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="products">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="search_par"
+                                    type="ns:SearchParamsType"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="productsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="product" type="ns:Product"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Product">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="id" nillable="false" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Unique ID of product</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="name" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Name of product</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="ext_name" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Name of product in external system</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="matgrp" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Products group</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="desc" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Description</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="status" nillable="true">
+                        <xs:annotation>
+                            <xs:documentation>Status: 'A' = Active, 'D' - Not active</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="A"/>
+                                <xs:enumeration value="D"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="price" nillable="true" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>Base brutto price</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="price_promo" nillable="true" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>Promotion price (brutto)</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="1" name="type" nillable="false">
+                        <xs:annotation>
+                            <xs:documentation>Type of product: M - model (parent of some products), W - variant (child
+                                of model product), N - Normal (not a variant nor parent of any other products)
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="M"/>
+                                <xs:enumeration value="N"/>
+                                <xs:enumeration value="W"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="parent_id" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Product ID of parent item (used in case of being a variant, filled when
+                                type = 'W')
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="vat_rate" nillable="true" type="xs:float">
+                        <xs:annotation>
+                            <xs:documentation>Tax rate (e.g. 23, 8)</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="unit" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Unit of measure</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="attribs" nillable="true" type="ns:ProductAttributes">
+                        <xs:annotation>
+                            <xs:documentation>Group of sub-attributes for a product</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ProductAttributes">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="sign" type="ns:ProductSign"></xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ProductSign">
+                <xs:sequence></xs:sequence>
+                <xs:attribute name="name" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Product's attribute name</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="value" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Value of attribute</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:complexType>
+            <xs:element name="clients">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="0" name="search_par"
+                                    type="ns:ClientSearchParamsType"></xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clientsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="customer" nillable="false"
+                                    type="ax22:CustomerDataType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="ClientSearchParamsType">
+                <xs:annotation>
+                    <xs:documentation>Search parameters for client search mechanism</xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_code" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_card_no" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_external_code" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_fname" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>First name</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_lname" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Last name</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_email" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Email</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="customer_phone" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>Phone</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element maxOccurs="1" minOccurs="0" name="delta" nillable="true" type="xs:int">
+                        <xs:annotation>
+                            <xs:documentation>Time back (in minutes) since last modification</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="clientsUpdate">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="client_data" type="ax22:CustomerDataType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clientsUpdateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int">
+                            <xs:annotation>
+                                <xs:documentation>Error code, 0/null - no errors</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Error message</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="customer_code" nillable="true" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>ID of processed client (uniqe value). Should be used for identifying
+                                    single client.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="shopLevels">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="matno" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="matname" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="matgroup" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="shop_no" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="shopLevelsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="item" type="ns:ShopLevelItem"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="ShopLevelItem">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="shop" type="ns:ShopLevel"/>
+                </xs:sequence>
+                <xs:attribute name="item" type="xs:string"/>
+                <xs:attribute name="name" type="xs:string"/>
+            </xs:complexType>
+            <xs:element name="clientCreate">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="client_data" type="ax22:CustomerDataType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clientCreateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int">
+                            <xs:annotation>
+                                <xs:documentation>Error code, 0/null - no errors</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Error message</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element maxOccurs="1" minOccurs="0" name="customer_code" nillable="true" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>ID of processed client (uniqe value). Should be used for identifying
+                                    single client.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerVoucher">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="customer_code" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="pin" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="date" nillable="false" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerVoucherResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="voucher" nillable="true" type="ns:VoucherType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="VoucherType">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="vouhdr" nillable="true" type="ns:VoucherHeader"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="voudtls" nillable="true"
+                                type="ns:VoucherDetailsType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="VoucherHeader">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="pin" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="vouno" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="date" nillable="true" type="xs:dateTime"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="totalnet" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="totalgross" type="xs:float"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="VoucherDetailsType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="1" name="voudetail" type="ns:VoucherDetail"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="VoucherDetail">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="0" name="item_code" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="item_name" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="amount" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="price" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="price_gross" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="total_price" nillable="true" type="xs:float"/>
+                    <xs:element maxOccurs="1" minOccurs="0" name="total_price_gross" nillable="true" type="xs:float"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="addVoucherInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="customer_code" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="1" name="pin" nillable="false" type="xs:string"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="vouinfo" nillable="true"
+                                    type="ns:VoucherInformationType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="VoucherInformationType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="info" type="ns:VoucherInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="VoucherInfo">
+                <xs:sequence>
+                    <xs:element maxOccurs="1" minOccurs="1" name="msg" nillable="false" type="xs:string"/>
+                    <xs:element maxOccurs="1" minOccurs="1" name="value" nillable="false" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="addVoucherInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="1" minOccurs="1" name="response_code" nillable="false" type="xs:int"/>
+                        <xs:element maxOccurs="1" minOccurs="0" name="response_message" nillable="true"
+                                    type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="productsResponse">
+        <wsdl:part name="parameters" element="ns:productsResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientsResponse">
+        <wsdl:part name="parameters" element="ns:clientsResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="stockLevelsRequest">
+        <wsdl:part name="parameters" element="ns:stockLevels"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="helloResponse">
+        <wsdl:part name="parameters" element="ns:helloResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="helloRequest">
+        <wsdl:part name="parameters" element="ns:hello"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="addVoucherInfoRequest">
+        <wsdl:part name="parameters" element="ns:addVoucherInfo"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="registerVoucherRequest">
+        <wsdl:part name="parameters" element="ns:registerVoucher"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="productsRequest">
+        <wsdl:part name="parameters" element="ns:products"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="shopLevelsResponse">
+        <wsdl:part name="parameters" element="ns:shopLevelsResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderConfirmRequest">
+        <wsdl:part name="parameters" element="ns:salesOrderConfirm"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="stockLevelsResponse">
+        <wsdl:part name="parameters" element="ns:stockLevelsResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="shopLevelsRequest">
+        <wsdl:part name="parameters" element="ns:shopLevels"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderStatusResponse">
+        <wsdl:part name="parameters" element="ns:statusResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderConfirmResponse">
+        <wsdl:part name="parameters" element="ns:response"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderResponse">
+        <wsdl:part name="parameters" element="ns:response"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderRequest">
+        <wsdl:part name="parameters" element="ns:salesOrder"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientsRequest">
+        <wsdl:part name="parameters" element="ns:clients"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="addVoucherInfoResponse">
+        <wsdl:part name="parameters" element="ns:addVoucherInfoResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="registerVoucherResponse">
+        <wsdl:part name="parameters" element="ns:registerVoucherResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientsUpdateRequest">
+        <wsdl:part name="parameters" element="ns:clientsUpdate"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientCreateResponse">
+        <wsdl:part name="parameters" element="ns:clientCreateResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientCreateRequest">
+        <wsdl:part name="parameters" element="ns:clientCreate"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="salesOrderStatusRequest">
+        <wsdl:part name="parameters" element="ns:salesOrderStatus"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="clientsUpdateResponse">
+        <wsdl:part name="parameters" element="ns:clientsUpdateResponse"></wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="OrderWebServicePortType">
+        <wsdl:operation name="salesOrder">
+            <wsdl:input message="ns:salesOrderRequest" wsaw:Action="urn:salesOrder"></wsdl:input>
+            <wsdl:output message="ns:salesOrderResponse" wsaw:Action="urn:response"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="salesOrderConfirm">
+            <wsdl:input message="ns:salesOrderConfirmRequest" wsaw:Action="urn:salesOrderConfirm"></wsdl:input>
+            <wsdl:output message="ns:salesOrderConfirmResponse" wsaw:Action="urn:response"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="salesOrderStatus">
+            <wsdl:input message="ns:salesOrderStatusRequest" wsaw:Action="urn:salesOrderStatus"></wsdl:input>
+            <wsdl:output message="ns:salesOrderStatusResponse" wsaw:Action="urn:statusResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="hello">
+            <wsdl:input message="ns:helloRequest"></wsdl:input>
+            <wsdl:output message="ns:helloResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stockLevels">
+            <wsdl:input message="ns:stockLevelsRequest"></wsdl:input>
+            <wsdl:output message="ns:stockLevelsResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="products">
+            <wsdl:input message="ns:productsRequest"></wsdl:input>
+            <wsdl:output message="ns:productsResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clients">
+            <wsdl:input message="ns:clientsRequest"></wsdl:input>
+            <wsdl:output message="ns:clientsResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clientsUpdate">
+            <wsdl:input message="ns:clientsUpdateRequest"></wsdl:input>
+            <wsdl:output message="ns:clientsUpdateResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="shopLevels">
+            <wsdl:input message="ns:shopLevelsRequest"></wsdl:input>
+            <wsdl:output message="ns:shopLevelsResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clientCreate">
+            <wsdl:input message="ns:clientCreateRequest"></wsdl:input>
+            <wsdl:output message="ns:clientCreateResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="registerVoucher">
+            <wsdl:input message="ns:registerVoucherRequest"></wsdl:input>
+            <wsdl:output message="ns:registerVoucherResponse"></wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addVoucherInfo">
+            <wsdl:input message="ns:addVoucherInfoRequest"></wsdl:input>
+            <wsdl:output message="ns:addVoucherInfoResponse"></wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="OrderWebServiceSoapBinding" type="ns:OrderWebServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="salesOrder">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/salesOrder"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="salesOrderConfirm">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/salesOrderConfirm"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="salesOrderStatus">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/salesOrderStatus"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="hello">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/hello"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stockLevels">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/stockLevels"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="products">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/products"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clients">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/clients"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clientsUpdate">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/clientsUpdate"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="shopLevels">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/shopLevels"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="clientCreate">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/clientCreate"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="registerVoucher">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/registerVoucher"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addVoucherInfo">
+            <soap:operation soapAction="http://order.ecommerce.webservice.application.wincash/addVoucherInfo"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OrderWebService">
+        <wsdl:port name="OrderWebServiceHttpSoapEndpoint" binding="ns:OrderWebServiceSoapBinding">
+            <soap:address location="http://localhost:8080/wincash.ecommerce.service/services/OrderWebService "/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

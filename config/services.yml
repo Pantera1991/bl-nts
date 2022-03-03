@@ -1,0 +1,18 @@
+services:
+  app.logger:
+    class: BaseLinkerNts\Log\AppLogger
+    arguments: [ 'baseLinker_nts' ]
+
+  app.service.nts.order:
+    class: BaseLinkerNts\Service\Nts\NtsOrderWebService
+    arguments: ['%env(NTS_PRODUCTION_LOGIN)%','%env(NTS_PRODUCTION_PASSWORD)%']
+
+  app.service.base_linker.order:
+    class: BaseLinkerNts\Service\BaseLinker\BaseLinkerOrderService
+    arguments: [ '%env(BL_EMPIK_API_KEY)%', '@app.logger' ]
+    public: true
+
+  app.manager.nts.order:
+    class: BaseLinkerNts\Service\Nts\NtsOrderManager
+    arguments: [ '@app.service.nts.order','@app.logger' ]
+    public: true
